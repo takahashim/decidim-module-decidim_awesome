@@ -15,7 +15,7 @@ module Decidim
     autoload :Lock, "decidim/decidim_awesome/lock"
     autoload :TranslatedCustomFieldsType, "decidim/decidim_awesome/api/types/translated_custom_fields_type"
     autoload :LocalizedCustomFieldsType, "decidim/decidim_awesome/api/types/localized_custom_fields_type"
-    autoload :Authorizator, "decidim/decidim_awesome/authorizator"
+    autoload :Authorizer, "decidim/decidim_awesome/authorizer"
 
     # Awesome comes with some components for participatory spaces
     # Currently :awesome_map and :awesome_iframe, list them here
@@ -129,6 +129,31 @@ module Decidim
       false
     end
 
+    # This is an anti-spam mechanism that uses the Hashcash algorithm to increase the cost of brute-force attacks
+    # on the login and signup forms. It works by requiring a Hashcash stamp to be sent with the form.
+    # See http://www.hashcash.org/docs/hashcash.html
+    # This configuration enables Hashcash for the signup forms.
+    # If set to :disabled, the feature will be completely removed (only on the signup form).
+    config_accessor :hashcash_signup do
+      false
+    end
+
+    # This configuration enables Hashcash for the login forms.
+    # If set to :disabled, the feature will be completely removed (only on the login form).
+    config_accessor :hashcash_login do
+      false
+    end
+
+    # The Hashcash bits are the number of bits of the stamp. The higher the number, the more difficult it is to generate a valid stamp.
+    # The default value is 20 bits for the signup form and 16 bits for the login form.
+    config_accessor :hashcash_signup_bits do
+      20
+    end
+
+    config_accessor :hashcash_login_bits do
+      16
+    end
+
     # allows admins to created specific CSS snippets affecting only some public frontend specific parts
     # Valid values differ a little from the previous convention:
     #   :disabled => false and non available, hidden from admins
@@ -178,22 +203,10 @@ module Decidim
       false
     end
 
-    # Forces the user to authorize using some registered verification flow in order to access the platform
-    # if set to an empty array, the user will be able to access the platform without any verification but admins can still enforce it
-    # if set to :disabled the feature will be completely removed
-    # You can initialize some default verification workflow manifests
-    config_accessor :force_authorization_after_login do
-      []
-    end
-
-    # By default all methods specified in force_authorization_after_login must be granted in order to access the platform
-    # if set to true, the user will be able to access the platform if any of the methods is granted
-    config_accessor :force_authorization_with_any_method do
-      false
-    end
-
-    # When force_authorization_after_login is enabled, this text will be shown to the user as a help text (ie: add a contact information)
-    config_accessor :force_authorization_help_text do
+    # Allows to enforce specific authorizations to access the platform
+    # Constraints can be defined for each group
+    # Set to :disabled to completely remove this feature
+    config_accessor :force_authorizations do
       {}
     end
 
@@ -231,6 +244,10 @@ module Decidim
     #    }
     # ]
     config_accessor :menu do
+      []
+    end
+
+    config_accessor :mobile_menu do
       []
     end
 

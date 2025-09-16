@@ -6,19 +6,19 @@ module Decidim::DecidimAwesome
     subject { paper_trail_version }
 
     let(:organization) { create(:organization) }
-    let(:user) { create(:user, organization:) }
+    let(:user) { create(:user, id: 1, organization:) }
 
     let(:external_organization) { create(:organization) }
-    let(:external_user) { create(:user, organization: external_organization) }
+    let(:external_user) { create(:user, id: 11, organization: external_organization) }
 
     context "when user roles" do
       let(:participatory_process_user_role) { create(:participatory_process_user_role, participatory_process:, user: administrator, role: "admin", created_at: 1.day.ago) }
-      let(:administrator) { create(:user, organization:, last_sign_in_at: 1.day.ago) }
+      let(:administrator) { create(:user, id: 111, organization:, last_sign_in_at: 1.day.ago) }
       let(:participatory_process) { create(:participatory_process, organization:) }
       let!(:paper_trail_version) { create(:paper_trail_version, item_type: "Decidim::ParticipatoryProcessUserRole", item_id: participatory_process_user_role.id, whodunnit: user.id, event: "create") }
 
       let(:external_participatory_process_user_role) { create(:participatory_process_user_role, participatory_process: external_participatory_process, user: external_valuator, role: "valuator", created_at: 1.day.ago) }
-      let(:external_valuator) { create(:user, organization: external_organization, last_sign_in_at: 1.day.ago) }
+      let(:external_valuator) { create(:user, id: 1111, organization: external_organization, last_sign_in_at: 1.day.ago) }
       let(:external_participatory_process) { create(:participatory_process, organization: external_organization) }
       let!(:external_paper_trail_version) { create(:paper_trail_version, item_type: "Decidim::ParticipatoryProcessUserRole", item_id: external_participatory_process_user_role.id, whodunnit: external_user.id, event: "create") }
 
@@ -27,14 +27,14 @@ module Decidim::DecidimAwesome
           object_changes: {
             "decidim_user_id" => [nil, administrator.id],
             "decidim_participatory_process_id" => [nil, participatory_process.id]
-          }.to_yaml
+          }
         )
 
         external_paper_trail_version.update!(
           object_changes: {
             "decidim_user_id" => [nil, external_valuator.id],
             "decidim_participatory_process_id" => [nil, external_participatory_process.id]
-          }.to_yaml
+          }
         )
       end
 
@@ -73,13 +73,13 @@ module Decidim::DecidimAwesome
         paper_trail_version.update!(
           object_changes: {
             "admin" => [false, true]
-          }.to_yaml
+          }
         )
 
         external_paper_trail_version.update!(
           object_changes: {
             "roles" => [[], ["valuator"]]
-          }.to_yaml
+          }
         )
       end
 

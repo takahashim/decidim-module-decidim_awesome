@@ -65,7 +65,7 @@ Many scopes can be defined for every tweak. If a tweak is not scoped, it will be
 
 This is a component you can add in any participatory space. It retrieves all the geolocated content in that participatory space (meetings or proposals) and displays it in a big map.
 
-It also provides a simple search by category, each category is assigned to a different color.
+It also provides a simple search by taxonomy, each taxonomy is assigned to a different color.
 
 ![Awesome map](examples/awesome-map.png)
 
@@ -387,7 +387,7 @@ Admins can manage these settings in the Awesome admin panel under the "Verificat
 ![Forced verifications admin side](examples/forced_verifications_admin.png)
 ![Forced verifications public side](examples/forced_verifications_public.png)
 
-Note that some pages are allowed, you can even configure which controller are allowed by creating an initializer ("required_authorizations" and "authorizations" are always allowed):
+You can configure which controller are allowed by creating an initializer (some controllers like the login, terms and conditions, etc. are always allowed):
 
 ```ruby
 # config/initializers/decidim_awesome.rb
@@ -411,6 +411,19 @@ System configuration:
 ![List of authorizations](examples/manual_verifications_1.png)
 ![Removing an authorization](examples/manual_verifications_2.png)
 ![Creating an authorization](examples/manual_verifications_3.png)
+
+#### 22. HashCash Anti-Bot login/registration
+
+This feature adds a HashCash-based anti-bot mechanism to the login and registration forms. HashCash is a proof-of-work system originally designed to limit email spam and denial-of-service attacks. When enabled, users must solve a computational puzzle (a "stamp") before submitting the form, making automated attacks significantly harder.
+
+The integration leverages the [ActiveHashcash](https://github.com/BaseSecrete/active_hashcash) gem to generate and verify HashCash stamps (although with some customizations). For more details on the HashCash protocol, see the [official documentation](http://www.hashcash.org/docs/hashcash.html).
+
+When this feature is active, each login or registration attempt requires a valid HashCash stamp, effectively reducing the risk of automated bot submissions.
+
+Note this feature is **disabled by default**, admins can enabled it under the "Surveys & Forms" menu in the Decidim Awesome admin dashboard.
+
+![Hashcash admin config](examples/haschcash_admin.png)
+![Hashcash public rendering](examples/hashcash_public.png)
 
 #### To be continued...
 
@@ -458,6 +471,7 @@ Depending on your Decidim version, choose the corresponding Awesome version to e
 
 | Awesome version | Compatible Decidim versions |
 |---|---|
+| 0.13.x | 0.30.x |
 | 0.12.x | 0.29.x |
 | 0.11.x | 0.28.x |
 | 0.10.x | >= 0.26.7, >= 0.27.x |

@@ -38,6 +38,7 @@ shared_examples "activated concerns" do |enabled|
       expect(Decidim::ErrorsController.included_modules).to include(Decidim::DecidimAwesome::NotFoundRedirect)
       expect(Decidim::Proposals::ApplicationHelper.included_modules).to include(Decidim::DecidimAwesome::Proposals::ApplicationHelperOverride)
       expect(Decidim::Proposals::ProposalForm.included_modules).to include(Decidim::DecidimAwesome::Proposals::ProposalFormCustomizations)
+      expect(Decidim::Proposals::Admin::ProposalForm.included_modules).to include(Decidim::DecidimAwesome::Proposals::Admin::ProposalFormCustomizations)
       expect(Decidim::Proposals::ProposalForm.included_modules).to include(Decidim::DecidimAwesome::Proposals::ProposalFormOverride)
       expect(Decidim::Proposals::Admin::ProposalForm.included_modules).to include(Decidim::DecidimAwesome::Proposals::ProposalFormOverride)
       expect(Decidim::AmendmentsHelper.included_modules).to include(Decidim::DecidimAwesome::AmendmentsHelperOverride)
@@ -56,7 +57,7 @@ shared_examples "activated concerns" do |enabled|
       expect(Decidim::AmendmentsController.included_modules).to include(Decidim::DecidimAwesome::LimitPendingAmendments)
       expect(Decidim::Proposals::ProposalsController.included_modules).to include(Decidim::DecidimAwesome::Proposals::OrderableOverride)
       expect(Decidim::AdminLog::ComponentPresenter.included_modules).to include(Decidim::DecidimAwesome::AdminLog::ComponentPresenterOverride)
-      expect(Decidim::ApplicationController.included_modules).to include(Decidim::DecidimAwesome::CheckLoginAuthorizations)
+      expect(Decidim::ApplicationController.included_modules).to include(Decidim::DecidimAwesome::EnforceAccessAuthorizations)
       expect(Decidim::ApplicationController.included_modules).to include(Decidim::DecidimAwesome::UseUserTimeZone)
       expect(Decidim::AccountForm.included_modules).to include(Decidim::DecidimAwesome::AccountFormOverride)
       expect(Decidim::UpdateAccount.included_modules).to include(Decidim::DecidimAwesome::UpdateAccountOverride)
@@ -65,6 +66,8 @@ shared_examples "activated concerns" do |enabled|
       expect(Decidim::System::UpdateOrganization.included_modules).to include(Decidim::DecidimAwesome::System::UpdateOrganizationOverride)
       expect(Decidim::System::CreateOrganization.included_modules).to include(Decidim::DecidimAwesome::System::CreateOrganizationOverride)
       expect(Decidim::AdminLog::UserPresenter.included_modules).to include(Decidim::DecidimAwesome::AdminLog::UserPresenterOverride)
+      expect(Decidim::Devise::SessionsController.included_modules).to include(Decidim::DecidimAwesome::NeedsHashcash)
+      expect(Decidim::Devise::RegistrationsController.included_modules).to include(Decidim::DecidimAwesome::NeedsHashcash)
     end
 
   else
@@ -75,6 +78,7 @@ shared_examples "activated concerns" do |enabled|
       expect(Decidim::ErrorsController.included_modules).not_to include(Decidim::DecidimAwesome::NotFoundRedirect)
       expect(Decidim::Proposals::ApplicationHelper.included_modules).not_to include(Decidim::DecidimAwesome::Proposals::ApplicationHelperOverride)
       expect(Decidim::Proposals::ProposalForm.included_modules).not_to include(Decidim::DecidimAwesome::Proposals::ProposalFormCustomizations)
+      expect(Decidim::Proposals::Admin::ProposalForm.included_modules).not_to include(Decidim::DecidimAwesome::Proposals::Admin::ProposalFormCustomizations)
       expect(Decidim::Proposals::ProposalForm.included_modules).not_to include(Decidim::DecidimAwesome::Proposals::ProposalFormOverride)
       expect(Decidim::Proposals::Admin::ProposalForm.included_modules).not_to include(Decidim::DecidimAwesome::Proposals::ProposalFormOverride)
       expect(Decidim::AmendmentsHelper.included_modules).not_to include(Decidim::DecidimAwesome::AmendmentsHelperOverride)
@@ -93,7 +97,7 @@ shared_examples "activated concerns" do |enabled|
       expect(Decidim::AmendmentsController.included_modules).not_to include(Decidim::DecidimAwesome::LimitPendingAmendments)
       expect(Decidim::Proposals::ProposalsController.included_modules).not_to include(Decidim::DecidimAwesome::Proposals::OrderableOverride)
       expect(Decidim::AdminLog::ComponentPresenter.included_modules).not_to include(Decidim::DecidimAwesome::AdminLog::ComponentPresenterOverride)
-      expect(Decidim::ApplicationController.included_modules).not_to include(Decidim::DecidimAwesome::CheckLoginAuthorizations)
+      expect(Decidim::ApplicationController.included_modules).not_to include(Decidim::DecidimAwesome::EnforceAccessAuthorizations)
       expect(Decidim::ApplicationController.included_modules).not_to include(Decidim::DecidimAwesome::UseUserTimeZone)
       expect(Decidim::AccountForm.included_modules).not_to include(Decidim::DecidimAwesome::AccountFormOverride)
       expect(Decidim::UpdateAccount.included_modules).not_to include(Decidim::DecidimAwesome::UpdateAccountOverride)
@@ -103,6 +107,9 @@ shared_examples "activated concerns" do |enabled|
       expect(Decidim::DecidimAwesome::AwesomeHelpers.included_modules).not_to include(Decidim::DecidimAwesome::AwesomeHelpers)
       expect(Decidim::DecidimAwesome::ContentSecurityPolicy.included_modules).not_to include(Decidim::DecidimAwesome::ContentSecurityPolicy)
       expect(Decidim::DecidimAwesome::UserOverride.included_modules).not_to include(Decidim::DecidimAwesome::UserOverride)
+      expect(Decidim::AdminLog::UserPresenter.included_modules).not_to include(Decidim::DecidimAwesome::AdminLog::UserPresenterOverride)
+      expect(Decidim::Devise::SessionsController.included_modules).not_to include(Decidim::DecidimAwesome::NeedsHashcash)
+      expect(Decidim::Devise::RegistrationsController.included_modules).not_to include(Decidim::DecidimAwesome::NeedsHashcash)
     end
   end
 end
@@ -189,7 +196,7 @@ shared_examples "basic rendering" do |enabled|
     end
 
     it "renders the home page" do
-      expect(page).to have_css(".home")
+      expect(page).to have_content("Welcome to")
     end
 
     it "has DecidimAwesome object" do
@@ -242,9 +249,13 @@ shared_examples "basic rendering" do |enabled|
         "config/proposal_custom_fields",
         "config/admins",
         "menus/menu/hacks",
+        "menus/mobile_menu/hacks",
         "menus/home_content_block_menu/hacks",
         "custom_redirects",
-        "config/livechat"
+        "config/livechat",
+        "config/verifications",
+        "maintenance/private_data",
+        "maintenance/hashcash"
       ]
     end
 

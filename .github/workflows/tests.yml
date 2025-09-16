@@ -1,4 +1,4 @@
-name: "[CI] Tests 0.29"
+name: "[CI] Tests 0.30"
 
 on:
   push:
@@ -10,8 +10,7 @@ env:
   CI: 1
   SIMPLECOV: 1
   NODE_VERSION: 18.17.1
-  RUBY_VERSION: 3.2.6
-  CHROME_VERSION: "126.0.6478.182"
+  RUBY_VERSION: 3.3.4
   BUNDLE_GEMFILE: Gemfile
   DISABLE_SPRING: 1
   DISPLAY: ":99"
@@ -25,6 +24,10 @@ env:
   DATABASE_HOST: localhost
   POSTGRES_PASSWORD: postgres
   BIG_SCREEN_SIZE: 1
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -146,13 +149,13 @@ jobs:
       - run: |
           sudo apt update
           sudo apt install libu2f-udev
-          wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${{ env.CHROME_VERSION }}-1_amd64.deb
+          wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo dpkg -i /tmp/chrome.deb
           rm /tmp/chrome.deb
+
       - uses: nanasess/setup-chromedriver@v2
-        name: Install Chrome version ${{ env.CHROME_VERSION }}
-        with:
-          chromedriver-version: ${{ env.CHROME_VERSION }}
+        name: Install Chrome version
+
       - run: |
           sudo apt install wkhtmltopdf imagemagick 7zip
 

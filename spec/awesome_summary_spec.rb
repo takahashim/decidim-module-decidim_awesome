@@ -31,7 +31,7 @@ describe Decidim::DecidimAwesome do
   let!(:allow_videos_in_editors) { create(:awesome_config, organization:, var: :allow_videos_in_editors, value: true) }
   let!(:auto_save_forms) { create(:awesome_config, organization:, var: :auto_save_forms, value: true) }
   let!(:user_timezone) { create(:awesome_config, organization:, var: :user_timezone, value: true) }
-  let!(:force_authorization_after_login) { create(:awesome_config, organization:, var: :force_authorization_after_login, value: [:dummy_authorization_handler]) }
+  let!(:force_authorizations) { create(:awesome_config, organization:, var: :force_authorizations, value: force_authorizations_value) }
   let!(:admins_available_authorizations) { create(:awesome_config, organization:, var: :admins_available_authorizations, value: [:dummy_authorization_handler]) }
   let!(:intergram_for_admins) { create(:awesome_config, organization:, var: :intergram_for_admins, value: true) }
   let!(:intergram_for_public) { create(:awesome_config, organization:, var: :intergram_for_public, value: true) }
@@ -47,6 +47,19 @@ describe Decidim::DecidimAwesome do
   let!(:validate_body_start_with_caps) { create(:awesome_config, organization:, var: :validate_body_start_with_caps, value: true) }
   let!(:weighted_proposal_voting) { create(:awesome_config, organization:, var: :weighted_proposal_voting, value: []) }
   let!(:additional_proposal_sortings) { create(:awesome_config, organization:, var: :additional_proposal_sortings, value: []) }
+  let!(:hashcash_signup) { create(:awesome_config, organization:, var: :hashcash_signup, value: true) }
+  let!(:hashcash_signup_bits) { create(:awesome_config, organization:, var: :hashcash_signup_bits, value: 21) }
+  let!(:hashcash_login) { create(:awesome_config, organization:, var: :hashcash_login, value: true) }
+  let!(:hashcash_login_bits) { create(:awesome_config, organization:, var: :hashcash_login_bits, value: 18) }
+  let(:force_authorizations_value) do
+    {
+      "some-group" => {
+        "authorization_handlers" => {
+          "dummy_authorization_handler" => {}
+        }
+      }
+    }
+  end
 
   let(:styles) { "body {background: red;}" }
   let(:intergram) do

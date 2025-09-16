@@ -1,13 +1,56 @@
 CHANGELOG
 =========
 
+v0.13.0
+-------
+
+Compatibility:
+  - Decidim 0.30.x
+
+Features:
+  - Upgrade to Decidim v0.30
+
+v0.12.4
+-------
+Compatibility:
+  - Decidim 0.29.x
+
+Features:
+  - Added application context for config constraints (whether the user is logged or not)
+  - Allow to granular permissions to forced verifications.
+    **NOTE** Config var `force_authorization_after_login` has changed to `force_authorizations`
+  - Fix use of Hashcash in loginModals
+  - Fix validation overrides in the admin for proposals
+
+v0.12.3
+-------
+
+Compatibility:
+  - Decidim 0.29.x
+
+Features:
+  - Fix custom styles loading order
+  - Fix for awesome map no loading in a component
+  - Fix "other" options in checkbox/radio custom fields
+  - Added Mobile Menu Override
+
+v0.12.2
+-------
+
+Compatibility:
+  - Decidim 0.29.x
+
+Features:
+  - Added HashCash anti-bot mechanism
+  - Fixed multi-tenant crossover in admin accountability
+
 v0.12.1
 -------
 
 Compatibility:
   - Decidim 0.29.x
 
-Feature:
+Features:
   - Added formBuilder languages controller to avoid external CDN
   - Fix cache hash in the global menu override
   - Fix crash on updating empty boxes for scoped admins

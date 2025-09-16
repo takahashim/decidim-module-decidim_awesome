@@ -3,13 +3,12 @@
 module Decidim
   module DecidimAwesome
     module Admin
-      # Editing menu items
       class CustomRedirectsController < DecidimAwesome::Admin::ApplicationController
         include NeedsAwesomeConfig
         include ConfigConstraintsHelpers
 
         before_action do
-          enforce_permission_to :edit_config, :menu
+          enforce_permission_to :edit_config, :custom_redirects
         end
 
         helper ConfigConstraintsHelpers
@@ -81,7 +80,7 @@ module Decidim
         end
 
         def current_config
-          @current_config ||= (AwesomeConfig.find_by(var: :custom_redirects, organization: current_organization)&.value || {})
+          @current_config ||= AwesomeConfig.find_by(var: :custom_redirects, organization: current_organization)&.value || {}
         end
       end
     end

@@ -1,4 +1,7 @@
 es:
+  active_hashcash:
+    submit_filter: Filtrar
+    waiting_label: Esperando verificación...
   activemodel:
     attributes:
       config:
@@ -6,10 +9,13 @@ es:
         allow_images_in_editors: Permitir imágenes en el editor HTML
         allow_images_in_proposals: Permitir imágenes en el editor de propuestas
         allow_videos_in_editors: Permitir vídeos en el editor HTML
+        authorization_options_form: Opciones de autorización
         auto_save_forms: Guardar automáticamente los formularios en el almacenamiento local
-        force_authorization_after_login: Forzar autorización después de iniciar sesión/registro
-        force_authorization_help_text: Texto de ayuda para la página de autorización
-        force_authorization_with_any_method: Permitir el acceso si se concede alguna de las autorizaciones (por defecto, todas son necesarias)
+        force_authorizations: Grupo de autorización %{id}
+        hashcash_login: Habilitar la protección del bot Hashcash para los usuarios existentes (login)
+        hashcash_login_bits: Número de bits para el algoritmo Hashcash (login)
+        hashcash_signup: Habilitar la protección del bot Hashcash para nuevos usuarios (registro)
+        hashcash_signup_bits: Número de bits para el algoritmo Hashcash (registro)
         intergram_auto_no_response: Un mensaje que se envía un minuto después de que la usuaria haya enviado su primer mensaje y no se haya recibido respuesta
         intergram_auto_response: Un mensaje que se envía inmediatamente después de que la usuaria envíe su primer mensaje
         intergram_chat_id: ID de chat
@@ -35,6 +41,7 @@ es:
         validate_title_min_length: Mínimo de caracteres requeridos para el título
         validate_title_start_with_caps: Forzar al título a comenzar con una letra mayúscula
       constraint:
+        application_context: Solo para
         component_id: o específicamente en
         component_manifest: Solo en componentes de tipo
         participatory_space_manifest: Aplicar en los espacios participativos de tipo
@@ -101,10 +108,12 @@ es:
             map_zoom: Zoom (cualquier número entre 0 y 18)
             map_zoom_help: Solo aplica si se define el punto central del mapa
             menu_amendments: Mostrar enmiendas
-            menu_categories: Mostrar menú de búsqueda por categorías
             menu_hashtags: Mostrar el menú de búsqueda por hashtag
             menu_meetings: Mostrar encuentros
             menu_merge_components: Combinar todos los componentes del mismo tipo en el menú
+            menu_taxonomies: Mostrar menú de búsqueda por taxonomías
+            taxonomy_filters: Seleccionar filtros para el componente
+            taxonomy_filters_add: Añadir filtro
             truncate: Número máximo de caracteres para las descripciones emergentes
           step:
             announcement: Anuncio
@@ -206,7 +215,10 @@ es:
           index:
             admin_head_tags: Etiquetas Awesome incluidas en el encabezado de la aplicación de administración
             decidim-admin: Del módulo Admin
+            decidim-assemblies: Del módulo Assemblies
+            decidim-conferences: Del módulo Conferences
             decidim-core: Del módulo Core
+            decidim-participatory_processes: Del módulo Participatory Processes
             decidim-proposals: Del módulo Propuestas
             decidim_version: Versión de Decidim %{version}
             errors:
@@ -221,6 +233,7 @@ es:
               Puedes iniciar el proceso ahora y se realizará en segundo plano.
             start_image_migrations: "\U0001F449 Iniciar el proceso de migración ahora"
         config:
+          anonymous: Usuarios no identificados
           caution: 'NOTA: Esta función modifica en gran medida algunos comportamientos por defecto que pueden llevar a resultados inesperados. ¡Utilícelo con precaución!'
           constraints:
             add_condition: Añadir restricción
@@ -229,6 +242,9 @@ es:
             delete: Eliminar
             edit: Editar
             title: 'Se aplica solo en estos casos:'
+          create_force_authorization:
+            error: '¡Error al crear un nuevo grupo de autorización! %{error}'
+            success: Grupo de autorización %{key} creado correctamente
           create_proposal_custom_field:
             error: '¡Error al crear una nueva caja de "campo personalizado"! %{error}'
             success: 'La caja "campo personalizado" %{key} se ha creado correctamente'
@@ -238,6 +254,9 @@ es:
           create_scoped_style:
             error: '¡Error al crear una nueva caja CSS! %{error}'
             success: Caja CSS %{key} creada correctamente
+          destroy_force_authorization:
+            error: '¡Error al eliminar el grupo de autorización! %{error}'
+            success: Grupo de autorización %{key} eliminado correctamente
           destroy_proposal_custom_field:
             error: '¡Error al eliminar la caja "campo personalizado"! %{error}'
             success: 'La caja "campo personalizado" %{key} se ha eliminado correctamente'
@@ -247,6 +266,7 @@ es:
           destroy_scoped_style:
             error: '¡Error al eliminar la caja CSS! %{error}'
             success: Caja CSS %{key} eliminada correctamente
+          force_authorizations: Grupos de autorizaciones
           form:
             additional_proposal_sortings:
               enable_all: Habilitar todas las opciones de ordenación adicionales
@@ -256,14 +276,23 @@ es:
             errors:
               incorrect_css: 'El CSS de la caja #%{key} no es válido'
               incorrect_json: 'La definición JSON en la caja #%{key} no es válida'
+            force_authorization_help_text: Texto de ayuda para la página de autorización
             help:
               allow_images_in_editors: Esto añadirá un icono para subir imágenes en el editor HTML
               allow_images_in_proposals: Esto permitirá subir imágenes en el editor de propuestas, disponibles para cualquier usuaria
               allow_videos_in_editors: Esto añadirá un icono para enlazar videos en el editor HTML
               auto_save_forms: Esto usará el almacenamiento local del navegador para guardar automáticamente los datos introducidos por las usuarias en las encuestas y otros formularios mientras los rellenen. Si no se ha mandado el formulario, los datos se restaurarán en la siguiente visita con el mismo navegador. Los datos se eliminarán una vez se envíe el formulario. Si las usuarias eliminan sus datos del navegador, estos tampoco se restaurarán.
               drag_and_drop_supported: Cuando se suban imágenes, se puede hacer a través del método "arrastrar & soltar". Las imágenes se subirán en el servidor y se insertarán como recursos externos (no se utiliza codificación en línea base64).
-              force_authorization_after_login: 'Si está habilitado, las usuarias serán redireccionados a la página de autorización después del inicio de sesión o registro si algunas de las autorizaciones especificadas no son concedidas. Esto es útil si desea forzar a las usuarias a que se verifiquen a través de una autorización específica antes de que puedan iniciar sesión en cualquier momento (por ejemplo: para prevenir spam).'
               force_authorization_help_text: Añade un texto personalizado para explicar por qué es necesaria la autorización. Asegúrate también de añadir un modo de contacto en caso de que las usuarias necesiten ayuda.
+              hashcash_i18n_key: 'Puedes personalizar el texto que se muestra a los usuarios en los botones de inicio de sesión / registro de envío con la clave de i18n: %{key}'
+              hashcash_login: |
+                Protege las aplicaciones de las Rails contra bots y ataques de fuerza bruta sin molestar a los humanos.
+                Hashcash es un sistema de prueba de trabajo que requiere que los usuarios resuelvan un rompecabezas computacional (realizado automáticamente por el navegador) antes de poder iniciar sesión.
+              hashcash_login_bits: Este parámetro define el número de bits que el algoritmo Hashcash utilizará para generar la prueba de trabajo. Se recomienda utilizar un valor entre 16 (fácil) y 30 bits (extremadamente duro). El valor por defecto para los formularios de inicio de sesión es %{bits} bits.
+              hashcash_signup: |
+                Protege las aplicaciones de las Rails contra bots y ataques de fuerza bruta sin molestar a los humanos.
+                Hashcash es un sistema de prueba de trabajo que requiere que los usuarios resuelvan un rompecabezas computacional (realizado automáticamente por el navegador) antes de poder registrarse.
+              hashcash_signup_bits: Este parámetro define el número de bits que el algoritmo Hashcash utilizará para generar la prueba de trabajo. Se recomienda utilizar un valor entre 16 (fácil) y 30 bits (extremadamente duro). El valor por defecto para los formularios de inicio de sesión es %{bits} bits.
               intergram_about: Intergram utiliza el Telegram Messenger para gestionar un widget de chat de soporte incrustado en la parte inferior de la página.
               intergram_config: 'Invita a la <a href="https://web.telegram.org/#/im?p=@IntergramBot">@Intergram bot</a> a tu grupo o inicia un chat con ella directamente. <a href="https://github.com/idoco/intergram#embed-intergram-in-your-website-with-these-2-simple-steps">+ info</a>'
               original_editor_override: Desde la versión 0.26, es posible (sólo para administradoras) subir imágenes en los editores. Por lo tanto, las opciones de configuración para imágenes aquí sólo afecta a los editores públicos (las administradoras siempre lo tendrán activado).
@@ -290,12 +319,21 @@ es:
               validate_title_max_marks_together: 'Limitar el número de símbolos de preguntas y exclamaciones que se pueden escribir juntos. Es decir, si es 2, entonces ''!!!'' no estará permitido en el texto'
               validate_title_min_length: El título siempre es obligatorio y este número no puede ser cero
               verifications_html: |
-                Aquí puedes realizar algunos ajustes en el proceso de verificación.<br>
-                <b>NOTA:</b> Ten en cuenta que cambiar estos ajustes puede impedir que algunas usuarias accedan a la plataforma. ¡Utilízalo con precaución!<br><br>
-                Ten en cuenta también, que estos ajustes se aplican a todas las usuarias. Las administradoras siempre tendrán acceso al tablero de administración.
+                Puedes poner restricciones de acceso adicionales a los espacios participativos o componentes que obligarán a los usuarios a ser verificados antes de acceder a ciertas ubicaciones (por ejemplo: para prevenir spam).<br>
+                Restricciones se aplican a todos los usuarios, pero los administradores siempre tendrán acceso al panel /admin.
             validators:
               body: Validaciones de entrada de usuario para el campo "cuerpo"
               title: Validaciones de entrada de usuario para el campo "título"
+          form_force_authorizations:
+            delete: Eliminar
+            force_authorizations_html: |
+              Define grupos de verificación. Cada grupo puede requerir que los usuarios sean verificados
+              por uno o más métodos para acceder a áreas específicas de la plataforma.
+            help: Puedes definir grupos de métodos de autorización y restringir el acceso basado en ellos.
+            new: Añadir nuevo grupo de autorización
+            remove: Eliminar este grupo de autorización
+            sure_to_remove: '¿Estás segura de que quieres eliminar este grupo de autorización?'
+            title: 'Restringir el acceso con:'
           form_proposal_custom_fields:
             delete: Eliminar
             new: Añadir una nueva caja de "campos personalizados"
@@ -342,6 +380,7 @@ es:
           update:
             error: '¡Error actualizando la configuración! %{error}'
             success: Configuración actualizada correctamente
+          user_logged_in: Usuarios con la sesión iniciada
         constraints:
           create:
             error: Error creando una nueva restricción
@@ -398,37 +437,25 @@ es:
           update:
             error: '¡Error al actualizar la redirección! %{error}'
             success: Redirección actualizada correctamente
-        maintenance:
-          private_data:
-            component: Espacio / Componente
-            confirm_delete: '¿Está seguro que desea eliminar todos los datos privados de este recurso? Esta acción no se puede deshacer.'
-            delete: Eliminar todo
-            destroying_private_data: Los datos privados para %{title} serán destruidos en breve. Por favor, compruébalo de nuevo en unos minutos.
-            done: Hecho
+        hashcash:
+          filters:
+            ip_addresses: Ver direcciones IP
+            stamps: Ver sellos Hashcash
+          index:
+            bits: Bits
+            created_at: Creado el
             help_html: |
-              Esta herramienta permite eliminar todos los datos privados de un determinado espacio participativo o componente. Esta acción es irreverible y eliminará todos los datos privados de la base de datos.
+              Esta página muestra los sellos de Hashcash que han sido detectados en el sistema. Hashcash es un sistema de prueba de trabajo que requiere que los usuarios resuelvan un rompecabezas computacional (realizado automáticamente por el navegador) antes de que puedan registrarse.
               <br><br>
-              <strong>¿Qué se considera información privada?</strong>
-              <br>
-              Los datos privados son cualquier información que no está disponible públicamente y sólo es accesible a los administradores. Esto, en este momento, incluye información privada de los campos personalizados.
-              <br><br>
-              <strong>¿Qué ocurre cuando elimino datos privados?</strong>
-              <br>
-              Al borrar datos privados, toda la información privada del espacio o componente participativo seleccionado será eliminada permanentemente de la base de datos. Un registro de esta acción se almacenará en el sistema para fines de auditoría (pero no los datos en si).
-              <br><br>
-              <strong>¿Qué pasa con los datos públicos?</strong>
-              <br>
-              datos públicos no se verán afectados por esta acción. Sólo los datos privados serán eliminados.
-              <br><br>
-              <strong>¿Hay un tiempo mínimo para esperar antes de eliminar datos privados?</strong>
-              <br>
-              Sí, no puede eliminar datos privados si la última actualización fue menor que la %{time_ago} . Puede cambiar esta configuración en un archivo inicializador.
-            items_count: Total afectados
-            last_date: Última actualización
-            no_data: No se han encontrado datos privados anteriores a %{time_ago}
-            not_destroyable: Este recurso no puede ser destruido todavía
-            removing: Eliminando...
-            time_ago: "Hace %{time}"
+              Cada entrada en esta lista representa un sello Hashcash que ha sido generado por un usuario cada vez que se ha registrado o conectado.
+            ip_address: Dirección IP
+            no_data: No se encontraron sellos Hashcash
+            request_path: Ruta solicitud
+          ip_addresses:
+            help_html: This page list all the IP addresses that have been detected in the system ordered by the number of Hashcash stamps they have generated. <br><br> Each stamp is either a login or a sign up action by a user. You can use this information to detect suspicious activity.
+            ip_address: Dirección IP
+            no_data: No se encontraron direcciones IP
+            stamps: Sellos Hashcash
         menu:
           admins: Administradoras acotadas
           custom_redirects: Redirecciones personalizadas
@@ -436,6 +463,7 @@ es:
           livechat: Chat en vivo
           maintenance:
             checks: Compatibilidad del sistema
+            hashcash: Sellos Hashcash
             maintenance: Mantenimiento
             private_data: Datos privados
           menu_hacks: Ajustes en el menú
@@ -472,6 +500,8 @@ es:
               title: Bloque de menú global en la home
             menu:
               title: Menú principal
+            mobile_menu:
+              title: Menú móvil
             new: Crear nuevo ítem
             remove: Eliminar adición
             remove_hack: Eliminar personalización
@@ -487,6 +517,37 @@ es:
           verification_modal:
             authorizations_for: Autorizaciones para %{user}
             close: Cerrar
+        private_data:
+          private_data:
+            component: Espacio / Componente
+            confirm_delete: '¿Está seguro que desea eliminar todos los datos privados de este recurso? Esta acción no se puede deshacer.'
+            delete: Eliminar todo
+            destroying: Los datos privados para %{title} serán destruidos en breve. Por favor, compruébalo de nuevo en unos minutos.
+            done: Hecho
+            help_html: |
+              Esta herramienta permite eliminar todos los datos privados de un determinado espacio participativo o componente. Esta acción es irreverible y eliminará todos los datos privados de la base de datos.
+              <br><br>
+              <strong>¿Qué se considera información privada?</strong>
+              <br>
+              Los datos privados son cualquier información que no está disponible públicamente y sólo es accesible a los administradores. Esto, en este momento, incluye información privada de los campos personalizados.
+              <br><br>
+              <strong>¿Qué ocurre cuando elimino datos privados?</strong>
+              <br>
+              Al borrar datos privados, toda la información privada del espacio o componente participativo seleccionado será eliminada permanentemente de la base de datos. Un registro de esta acción se almacenará en el sistema para fines de auditoría (pero no los datos en si).
+              <br><br>
+              <strong>¿Qué pasa con los datos públicos?</strong>
+              <br>
+              datos públicos no se verán afectados por esta acción. Sólo los datos privados serán eliminados.
+              <br><br>
+              <strong>¿Hay un tiempo mínimo para esperar antes de eliminar datos privados?</strong>
+              <br>
+              Sí, no puede eliminar datos privados si la última actualización fue menor que la %{time_ago}. Puede cambiar esta configuración en un archivo inicializador.
+            items_count: Total afectados
+            last_date: Última actualización
+            no_data: No se han encontrado datos privados anteriores a %{time_ago}
+            not_destroyable: Este recurso no puede ser destruido todavía
+            removing: Eliminando...
+            time_ago: "Hace %{time}"
         proposal_custom_fields:
           menu:
             title: Campos públicos
@@ -501,6 +562,9 @@ es:
         scoped_styles:
           menu:
             title: Interfaz pública
+        visibility:
+          info_html: Puedes administrar restricciones de acceso adicionales usando verificaciones con %{awesome_link}.
+          restricted_html: Este espacio está utilizando restricciones de acceso adicionales con %{awesome_link}.
       admin_log:
         component:
           destroy_private_data: "%{user_name} ha destruido %{count} elementos de datos privados para %{resource_name} en %{space_name}"
@@ -542,6 +606,7 @@ es:
           show_not_answered: Muestra las propuestas pendientes de contestart
           show_rejected: Muestra las propuestas rechazadas
           show_withdrawn: Muestra las propuestas retiradas
+          taxonomies: Taxonomías
           text_settings: Ajustes del texto
           title: Título
           truncate: Número máximo de caracteres para las descripciones emergentes
@@ -574,6 +639,7 @@ es:
       proposal_private_custom_fields_disclosure: Esta información no será publicada
       required_authorizations:
         index:
+          authorization_options_invalid: Desafortunadamente, aunque tiene esta autorización, los datos utilizados para verificarte que no son válidos en este contexto.
           cancel: Haré esto en otro momento, %{link}.
           granted_title: Verificaciones concedidas
           logout: déjame cerrar la sesión
@@ -617,6 +683,9 @@ es:
             weight_2_short: 'A:'
             weight_3: Verde
             weight_3_short: 'V:'
+    download_your_data:
+      show:
+        admin_actions: Acciones de Administrador
     meetings:
       meetings_map:
         view_meeting: Ver encuentro
@@ -640,16 +709,17 @@ es:
             title: 'Herramientas de mantenimiento: %{title}'
             titles:
               checks: Análisis de compatibilidad del sistema
+              hashcash: Sellos Hashcash
               private_data: Limpieza de datos privados
         awesome_config:
           amendments: Enmiendas
           autosaved_error: El almacenamiento local no es compatible con tu navegador, el formulario no se podrá guardar automáticamente.
           autosaved_retrieved: Los datos de este formulario se han recuperado de una sesión anterior
           autosaved_success: Datos guardados en el almacenamiento local
-          categories: Categorías
           drag_and_drop_image: Puedes añadir imágenes arrastrando y soltándolas o también pegándolas.
           hashtags: Hashtags
           items: elementos
           meetings: Encuentros
           proposals: Propuestas
           select_deselect_all: Seleccionar/deseleccionar todo
+          taxonomies: Taxonomías

@@ -6,6 +6,7 @@ require "decidim/core"
 require "decidim/decidim_awesome/awesome_helpers"
 require "decidim/decidim_awesome/menu"
 require "decidim/decidim_awesome/middleware/current_config"
+require "active_hashcash" if Decidim::DecidimAwesome.enabled?(:hashcash_signup, :hashcash_login)
 
 module Decidim
   module DecidimAwesome
@@ -25,18 +26,26 @@ module Decidim
       # https://edgeguides.rubyonrails.org/engines.html#overriding-models-and-controllers
       # overrides
       config.to_prepare do
+        if DecidimAwesome.enabled?(:hashcash_signup, :hashcash_login)
+          # Add hashcash to signup and login
+          Decidim::Devise::SessionsController.include(Decidim::DecidimAwesome::NeedsHashcash)
+          Decidim::Devise::RegistrationsController.include(Decidim::DecidimAwesome::NeedsHashcash)
+          Decidim::ApplicationController.include(Decidim::DecidimAwesome::NeedsHashcash)
+        end
         # Include additional helpers globally
         ActiveSupport.on_load(:action_view) { include Decidim::DecidimAwesome::AwesomeHelpers }
         # Also for cells
         Decidim::ViewModel.include(Decidim::DecidimAwesome::AwesomeHelpers)
 
         # Override EtiquetteValidator
-        EtiquetteValidator.include(Decidim::DecidimAwesome::EtiquetteValidatorOverride) if DecidimAwesome.enabled?(:validate_title_max_caps_percent,
-                                                                                                                   :validate_title_max_marks_together,
-                                                                                                                   :validate_title_start_with_caps,
-                                                                                                                   :validate_body_max_caps_percent,
-                                                                                                                   :validate_body_max_marks_together,
-                                                                                                                   :validate_body_start_with_caps)
+        if DecidimAwesome.enabled?(:validate_title_max_caps_percent,
+                                   :validate_title_max_marks_together,
+                                   :validate_title_start_with_caps,
+                                   :validate_body_max_caps_percent,
+                                   :validate_body_max_marks_together,
+                                   :validate_body_start_with_caps)
+          EtiquetteValidator.include(Decidim::DecidimAwesome::EtiquetteValidatorOverride)
+        end
 
         # Custom fields need to deal with several places
         if DecidimAwesome.enabled?(:proposal_custom_fields,
@@ -50,6 +59,7 @@ module Decidim
                                    :validate_body_max_marks_together,
                                    :validate_body_start_with_caps)
           Decidim::Proposals::ProposalForm.include(Decidim::DecidimAwesome::Proposals::ProposalFormCustomizations)
+          Decidim::Proposals::Admin::ProposalForm.include(Decidim::DecidimAwesome::Proposals::Admin::ProposalFormCustomizations)
         end
 
         if DecidimAwesome.enabled?(:proposal_custom_fields, :proposal_private_custom_fields)
@@ -93,8 +103,8 @@ module Decidim
         # override user's admin property
         Decidim::User.include(Decidim::DecidimAwesome::UserOverride) if DecidimAwesome.enabled?(:scoped_admins)
 
-        if DecidimAwesome.enabled?(:menu, :content_block_main_menu)
-          Decidim::ContentBlocks::GlobalMenuCell.include(Decidim::DecidimAwesome::GlobalMenuCellOverride)
+        if DecidimAwesome.enabled?(:menu, :mobile_menu, :home_content_block_menu)
+          Decidim::ContentBlocks::GlobalMenuCell.include(Decidim::DecidimAwesome::GlobalMenuCellOverride) if DecidimAwesome.enabled?(:home_content_block_menu)
           Decidim::BreadcrumbHelper.include(Decidim::DecidimAwesome::BreadcrumbHelperOverride)
           Decidim::MenuPresenter.include(Decidim::DecidimAwesome::MenuPresenterOverride)
           Decidim::MenuItemPresenter.include(Decidim::DecidimAwesome::MenuItemPresenterOverride)
@@ -112,7 +122,7 @@ module Decidim
 
       initializer "decidim_decidim_awesome.overrides", after: "decidim.action_controller" do
         config.to_prepare do
-          Decidim::ApplicationController.include(Decidim::DecidimAwesome::CheckLoginAuthorizations) if DecidimAwesome.enabled?(:force_authorization_after_login)
+          Decidim::ApplicationController.include(Decidim::DecidimAwesome::EnforceAccessAuthorizations) if DecidimAwesome.enabled?(:force_authorizations)
           Decidim::ApplicationController.include(Decidim::DecidimAwesome::UseUserTimeZone) if Decidim::DecidimAwesome.enabled?(:user_timezone)
 
           # Auto-insert some csp directives
@@ -219,7 +229,9 @@ module Decidim
             voting.proposal_metadata_cell = "decidim/decidim_awesome/voting/proposal_metadata"
             voting.weight_validator do |weight, context|
               allowed = [1, 2, 3]
+              # rubocop:disable Style/SafeNavigationChainLength
               allowed << 0 if context[:proposal]&.component&.settings&.voting_cards_show_abstain
+              # rubocop:enable Style/SafeNavigationChainLength
               weight.in? allowed
             end
           end
@@ -292,6 +304,8 @@ module Decidim
         Decidim.icons.register(name: "spy", icon: "spy-fill", category: "system", description: "", engine: :decidim_awesome)
         Decidim.icons.register(name: "forbid-line", icon: "forbid-line", category: "system", description: "", engine: :decidim_awesome)
         Decidim.icons.register(name: "file-settings-line", icon: "file-settings-line", category: "system", description: "", engine: :decidim_awesome)
+        Decidim.icons.register(name: "hashtag", icon: "hashtag", category: "system", description: "", engine: :decidim_awesome)
+        Decidim.icons.register(name: "smartphone", icon: "smartphone-line", category: "system", description: "", engine: :decidim_awesome)
       end
     end
   end

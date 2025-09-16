@@ -38,11 +38,6 @@ module Decidim::DecidimAwesome
         }
       end
       let(:user_timezone) { true }
-      let(:force_authorization_after_login) { ["", "dummy_authorization_handler", "another_dummy_authorization_handler"] }
-      let(:force_authorization_with_any_method) { true }
-      let(:force_authorization_help_text) do
-        { en: "Help text" }
-      end
       let(:valid_fields) { '[{"foo":"bar"}]' }
       let(:invalid_fields) { '[{"foo":"bar"}]{"baz":"zet"}' }
 
@@ -54,22 +49,13 @@ module Decidim::DecidimAwesome
       let(:validate_body_max_caps_percent) { 25 }
       let(:validate_body_max_marks_together) { 2 }
       let(:validate_body_start_with_caps) { true }
+      let(:hashcash_signup) { true }
+      let(:hashcash_signup_bits) { 21 }
+      let(:hashcash_login) { true }
+      let(:hashcash_login_bits) { 18 }
 
       context "when everything is OK" do
         it { is_expected.to be_valid }
-      end
-
-      describe "valid_keys" do
-        let(:attributes) do
-          {
-            force_authorization_after_login:,
-            force_authorization_help_text_en: "Help text"
-          }
-        end
-
-        it "extracts valid keys from params" do
-          expect(subject.valid_keys).to eq([:force_authorization_after_login, :force_authorization_help_text])
-        end
       end
 
       describe "custom styles" do
@@ -158,30 +144,6 @@ module Decidim::DecidimAwesome
         end
       end
 
-      describe "force authorization after login" do
-        let(:attributes) do
-          {
-            force_authorization_after_login:,
-            force_authorization_with_any_method:,
-            force_authorization_help_text:
-          }
-        end
-
-        it { is_expected.to be_valid }
-
-        context "and force authorization after login is empty" do
-          let(:force_authorization_after_login) { [] }
-
-          it { is_expected.to be_valid }
-        end
-
-        context "and force authorization after login is not a valid handler" do
-          let(:force_authorization_after_login) { %w(invalid_handler another_dummy_authorization_handler) }
-
-          it { is_expected.not_to be_valid }
-        end
-      end
-
       describe "validators" do
         let(:attributes) do
           {
@@ -192,7 +154,11 @@ module Decidim::DecidimAwesome
             validate_body_min_length:,
             validate_body_max_caps_percent:,
             validate_body_max_marks_together:,
-            validate_body_start_with_caps:
+            validate_body_start_with_caps:,
+            hashcash_signup:,
+            hashcash_signup_bits:,
+            hashcash_login:,
+            hashcash_login_bits:
           }
         end
 
@@ -296,6 +262,42 @@ module Decidim::DecidimAwesome
 
         context "and body max marks together is zero" do
           let(:validate_body_max_marks_together) { 0 }
+
+          it { is_expected.not_to be_valid }
+        end
+
+        context "and hashcash signup bits is empty" do
+          let(:hashcash_signup_bits) { nil }
+
+          it { is_expected.not_to be_valid }
+        end
+
+        context "and hashcash signup bits is less than 10" do
+          let(:hashcash_signup_bits) { 9 }
+
+          it { is_expected.not_to be_valid }
+        end
+
+        context "and hashcash signup bits is greater than 50" do
+          let(:hashcash_signup_bits) { 51 }
+
+          it { is_expected.not_to be_valid }
+        end
+
+        context "and hashcash login bits is empty" do
+          let(:hashcash_login_bits) { nil }
+
+          it { is_expected.not_to be_valid }
+        end
+
+        context "and hashcash login bits is less than 10" do
+          let(:hashcash_login_bits) { 9 }
+
+          it { is_expected.not_to be_valid }
+        end
+
+        context "and hashcash login bits is greater than 50" do
+          let(:hashcash_login_bits) { 51 }
 
           it { is_expected.not_to be_valid }
         end

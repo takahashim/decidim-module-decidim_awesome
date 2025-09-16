@@ -25,12 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const dataset = document.getElementById("awesome-map").dataset;
   const config = {
     length: parse(dataset.truncate) || 254,
-    center: sanitizeCenter(parse(dataset.mapCenter)),
+    center: sanitizeCenter(dataset.mapCenter),
     zoom: parse(dataset.mapZoom),    
     menu: {
       amendments: parse(dataset.menuAmendments),
       meetings: parse(dataset.menuMeetings),
-      categories: parse(dataset.menuCategories),
+      taxonomies: parse(dataset.menuTaxonomies),
       hashtags: parse(dataset.menuHashtags),
       mergeComponents: parse(dataset.menuMergeComponents)
     },
