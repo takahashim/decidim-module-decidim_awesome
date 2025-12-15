@@ -50,7 +50,7 @@ describe "Show awesome map" do
       # static: { url: "https://image.maps.ls.hereapi.com/mia/1.6/mapview" }
       dynamic: {
         tile_layer: {
-          url: "/tile-0.png"
+          url: Decidim::Dev::Test::MapServer.url(:tiles)
         }
       }
     }
